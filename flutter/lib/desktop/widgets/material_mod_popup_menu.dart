@@ -271,7 +271,7 @@ class PopupMenuItem<T> extends PopupMenuEntry<T> {
   /// The text style of the popup menu item.
   ///
   /// If this property is null, then [PopupMenuThemeData.textStyle] is used.
-  /// If [PopupMenuThemeData.textStyle] is also null, then [TextTheme.subtitle1]
+  /// If [PopupMenuThemeData.textStyle] is also null, then [TextTheme.titleMedium]
   /// of [ThemeData.textTheme] is used.
   final TextStyle? textStyle;
 
@@ -341,8 +341,9 @@ class PopupMenuItemState<T, W extends PopupMenuItem<T>> extends State<W> {
   @protected
   void handleTap() {
     widget.onTap?.call();
-
-    Navigator.pop<T>(context, widget.value);
+    if (Navigator.canPop(context)) {
+      Navigator.pop<T>(context, widget.value);
+    }
   }
 
   @override
@@ -351,7 +352,7 @@ class PopupMenuItemState<T, W extends PopupMenuItem<T>> extends State<W> {
     final PopupMenuThemeData popupMenuTheme = PopupMenuTheme.of(context);
     TextStyle style = widget.textStyle ??
         popupMenuTheme.textStyle ??
-        theme.textTheme.subtitle1!;
+        theme.textTheme.titleMedium!;
 
     if (!widget.enabled) style = style.copyWith(color: theme.disabledColor);
 
@@ -1378,7 +1379,6 @@ class PopupMenuButtonState<T> extends State<PopupMenuButton<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final IconThemeData iconTheme = IconTheme.of(context);
     final bool enableFeedback = widget.enableFeedback ??
         PopupMenuTheme.of(context).enableFeedback ??
         true;
@@ -1400,7 +1400,7 @@ class PopupMenuButtonState<T> extends State<PopupMenuButton<T>> {
     }
 
     return MenuButton(
-      icon: widget.icon ?? Icon(Icons.adaptive.more),
+      child: widget.icon ?? Icon(Icons.adaptive.more),
       tooltip:
           widget.tooltip ?? MaterialLocalizations.of(context).showMenuTooltip,
       onPressed: widget.enabled ? showButtonMenu : null,

@@ -5,7 +5,7 @@ class MenuButton extends StatefulWidget {
   final Color color;
   final Color hoverColor;
   final Color? splashColor;
-  final Widget icon;
+  final Widget child;
   final String? tooltip;
   final EdgeInsetsGeometry padding;
   final bool enableFeedback;
@@ -14,7 +14,7 @@ class MenuButton extends StatefulWidget {
     required this.onPressed,
     required this.color,
     required this.hoverColor,
-    required this.icon,
+    required this.child,
     this.splashColor,
     this.tooltip = "",
     this.padding = const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
@@ -27,31 +27,34 @@ class MenuButton extends StatefulWidget {
 
 class _MenuButtonState extends State<MenuButton> {
   bool _isHover = false;
+  final double _borderRadius = 8.0;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.padding,
       child: Tooltip(
+        waitDuration: Duration(milliseconds: 300),
         message: widget.tooltip,
         child: Material(
           type: MaterialType.transparency,
-          child: Ink(
+          child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(_borderRadius),
               color: _isHover ? widget.hoverColor : widget.color,
             ),
             child: InkWell(
+              hoverColor: widget.hoverColor,
               onHover: (val) {
                 setState(() {
                   _isHover = val;
                 });
               },
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(_borderRadius),
               splashColor: widget.splashColor,
               enableFeedback: widget.enableFeedback,
               onTap: widget.onPressed,
-              child: widget.icon,
+              child: widget.child,
             ),
           ),
         ),
